@@ -36,7 +36,7 @@ public class Application {
                 originalChess[0] = input.charAt(0);
                 int x = originalChess[0] - 65;
                 int y = originalChess[1] - 49;
-                if(x<0||x>=8||y<0||y>=10) throw new Exception ("Input does not in range A0 to G9");
+                if(x<0||x>7||y<0||y>9) throw new Exception ("Input does not in range A0 to G9");
 
 
                 System.out.println(x + " " + y);
@@ -48,6 +48,7 @@ public class Application {
 
                 int x1 = targetLocation[0] - 65;
                 int y1 = targetLocation[1] - 49;
+                if(x1<0||x1>7||y1<0||y1>9) throw new Exception ("Input does not in range A0 to G9");
                 System.out.println(x1 + " " + y1);
                 game.UserMove(x, y, x1, y1);
                 game.PrintBoard();
