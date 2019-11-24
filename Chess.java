@@ -1,5 +1,3 @@
-package hk.edu.polyu.comp.comp2021.jungle.model;
-
 class Chess extends Coordinate{
     private final char []CHESS = {'r', 'c', 'd', 'w', 'l', 't', 'L', 'E'};
     private int rank;

@@ -1,4 +1,3 @@
-package hk.edu.polyu.comp.comp2021.jungle.model;
 import java.util.Scanner;
 
 public class GetInput {
