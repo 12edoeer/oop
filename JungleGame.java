@@ -1,7 +1,9 @@
+import java.lang.annotation.Target;
+
 public class JungleGame {
 
     private char[][] jungleBoard = new char[9][7];
-    private char[][] PlayerjungleBoard = new char[9][7];
+    private int[][] PlayerjungleBoard = new int[9][7];
     private int[][] WaterBoard = new int[9][7];
 
     private Player x = new Player();
@@ -36,7 +38,9 @@ public class JungleGame {
     public void PrintBoard() {
 
         int z = 1;
-        System.out.println("        " + x.GetName());
+        System.out.println();
+        System.out.println("Player two : " + x.GetName());
+        System.out.println();
         for (int i = 0; i < 9; i++) {
             //System.out.println("  - - - - - - -");
             System.out.print(z++ + "|");
@@ -53,7 +57,8 @@ public class JungleGame {
             System.out.print(x + " ");
         }
         System.out.println();
-        System.out.println("        " + y.GetName());
+        System.out.println();
+        System.out.println("  Player one : " + y.GetName());
 
     }
 
@@ -137,11 +142,12 @@ public class JungleGame {
 
     }
 
-    public void UserMove(int OriX, int OriY, int targetX, int targetY) {
+    public void UserMove(int OriX, int OriY, int targetX, int targetY, int move) {
 
         ////////////////////////////////////////////////////////////////////////////
         // One space move only else you are tiger or lion can jump over the river //
         ////////////////////////////////////////////////////////////////////////////
+
         if (targetX - OriX + targetY - OriY > 1) {
             if (this.jungleBoard[OriY][OriX] != 'L' || this.jungleBoard[OriY][OriX] != 't') {
                 System.out.println("Lion");
@@ -159,7 +165,9 @@ public class JungleGame {
                 return;
             }
         }
-
+        /////////////////////////////////
+        //   Cant step on your chess   //
+        /////////////////////////////////
         if (this.PlayerjungleBoard[OriY][OriX] == 1) {
             if (this.PlayerjungleBoard[targetY][targetX] == 1) {
                 System.out.println("Same player chess, not a valid move");
@@ -176,6 +184,30 @@ public class JungleGame {
 
         }
 
+        /////////////////////////////////
+        //     Step on enemy chess     //
+        /////////////////////////////////
+        if (this.PlayerjungleBoard[OriY][OriX] == 1 || this.PlayerjungleBoard[OriY][OriX] == 2) {
+            if (this.PlayerjungleBoard[targetY][targetX] == 1 || this.PlayerjungleBoard[targetY][targetX] == 2) {
+                if (this.PlayerjungleBoard[targetY][targetX] != this.PlayerjungleBoard[OriY][OriX]) {
+                    if (Fight(OriX, OriY, targetX, targetY) == true) {
+                        Move(targetX,targetY,OriX,OriY);
+                        return;
+                    }else{
+                        this.PlayerjungleBoard[OriY][OriX] = 0;
+                        this.jungleBoard[OriY][OriX] = '\0';
+                        return;
+                    }
+                }
+            }
+        }
+
+        Move(targetX,targetY,OriX,OriY);
+
+
+    }
+
+    public void Move(int targetX, int targetY, int OriX, int OriY) {
 
         this.jungleBoard[targetY][targetX] = this.jungleBoard[OriY][OriX];
         this.jungleBoard[OriY][OriX] = '\0';
@@ -183,6 +215,9 @@ public class JungleGame {
         this.PlayerjungleBoard[targetY][targetX] = this.PlayerjungleBoard[OriY][OriX];
         this.PlayerjungleBoard[OriY][OriX] = '\0';
 
+        ////////////////////////////
+        //    rat move on water   //
+        ////////////////////////////
         if (WaterBoard[OriY][OriX] == 1) {
             this.Insert(WATER, OriY, OriX, 10);
             jungleBoard[OriY][OriX] = 'W';
@@ -192,9 +227,31 @@ public class JungleGame {
 
 
     }
+    public void checkPlayer(){
+        
+    }
+    public Boolean Fight(int a, int b, int c, int d) {
+        Chess Chess1 = new Chess(a, b, jungleBoard[b][a]);
+        Chess Chess2 = new Chess(c, d, jungleBoard[d][c]);
+        System.out.println("Chess one is: " + Chess1.GetRank());
+        System.out.println("Chess two is: " + Chess2.GetRank());
 
-
-    public void Fight() {
+        if (Chess1.GetRank() == 0 && (Chess2.GetRank() == 7)) {
+            System.out.println("Win");
+            return true;
+        }
+        if (Chess1.GetRank() == 7 && (Chess2.GetRank() == 0)) {
+            System.out.println("Lose1");
+            return false;
+        }
+        if (Chess1.GetRank() >= Chess2.GetRank()) {
+            System.out.println("Win");
+            return true;
+        }else
+        {
+            System.out.println("Lose");
+            return false;
+        }
 
     }
 }
