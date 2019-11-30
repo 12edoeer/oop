@@ -51,14 +51,14 @@ public class Application {
                 int y1 = targetLocation[1] - 49;
                 if(x1<0||x1>7||y1<0||y1>9) throw new Exception ("Input does not in range A0 to G9");
                 System.out.println(x1 + " " + y1);
-
                 game.UserMove(x, y, x1, y1,moveCount%2);
 
                 game.PrintBoard();
                 System.out.println(moveCount);
             } catch (Exception e) {
-                System.out.println(e);
                 game.PrintBoard();
+                System.out.println(e);
+
             }
         }
 
