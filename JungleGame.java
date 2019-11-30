@@ -5,6 +5,7 @@ public class JungleGame {
     private char[][] jungleBoard = new char[9][7];
     private int[][] PlayerjungleBoard = new int[9][7];
     private int[][] WaterBoard = new int[9][7];
+    private int[][] TrapBoard = new int[9][7];
 
     private Player x = new Player();
     private Player y = new Player();
@@ -143,11 +144,20 @@ public class JungleGame {
     }
 
     public void UserMove(int OriX, int OriY, int targetX, int targetY, int move) {
-
         ////////////////////////////////////////////////////////////////////////////
         // One space move only else you are tiger or lion can jump over the river //
         ////////////////////////////////////////////////////////////////////////////
+        checkPlayer(move,OriX,OriY);
 
+        ////////////////////////////////////////////
+        // Tiger and lion can jump over the river //
+        ////////////////////////////////////////////
+
+        if(this.jungleBoard[OriY][OriX]=='L'||this.jungleBoard[OriY][OriX]=='t'){
+            if(OriY == targetY){
+
+            }
+        }
         if (targetX - OriX + targetY - OriY > 1) {
             if (this.jungleBoard[OriY][OriX] != 'L' || this.jungleBoard[OriY][OriX] != 't') {
                 System.out.println("Lion");
@@ -155,16 +165,16 @@ public class JungleGame {
             System.out.println("Invalid input, you can only move vertically or horizontally with one space");
             return;
         }
-
         /////////////////////////////////
         // Only rat can get into river //
         /////////////////////////////////
         if (this.jungleBoard[targetY][targetX] == 'W') {
             if (this.jungleBoard[OriY][OriX] != 'r') {
-                System.out.println("You cant get into river");
+                System.out.println("You can't get into river");
                 return;
             }
         }
+
         /////////////////////////////////
         //   Cant step on your chess   //
         /////////////////////////////////
@@ -203,7 +213,7 @@ public class JungleGame {
         }
 
         Move(targetX,targetY,OriX,OriY);
-
+        return;
 
     }
 
@@ -224,11 +234,45 @@ public class JungleGame {
         }
 
         System.out.println("Moved");
-
-
+        Application.moveCount = Application.moveCount+1;
     }
-    public void checkPlayer(){
+    public void checkPlayer(int check, int x, int y){
+        if(check==0)check=+2;
+            if(this.PlayerjungleBoard[y][x]==check)return;
+            else{
         
+                PrintBoard();
+                System.out.println("YOU CANT MOVE OTHER PLAYER CHESS");
+                while (true) {
+                    try {
+                        String input;
+                        System.out.println("Please input the chess that you want to move again:");
+                        input = GetInput.Input();
+                        char originalChess[] = input.toCharArray();
+                        originalChess[0] = input.charAt(0);
+                        int inputX = originalChess[0] - 65;
+                        int inputY = originalChess[1] - 49;
+                        if(inputX<0||inputX>7||inputY<0||inputY>9) throw new Exception ("Input does not in range A0 to G9");
+                        System.out.println(inputX + " " + inputY);
+                        System.out.println("Target Location:");
+                        input = GetInput.Input().toUpperCase();
+                        char targetLocation[] = input.toCharArray();
+                        targetLocation[0] = input.charAt(0);
+                        int inputX1 = targetLocation[0] - 65;
+                        int inputY1 = targetLocation[1] - 49;
+                        if(inputX1<0||inputX1>7||inputY1<0||inputY1>9) throw new Exception ("Input does not in range A0 to G9");
+                        System.out.println(inputX1 + " " + inputY1);
+                        UserMove(inputX, inputY, inputX1, inputY1,check);
+                    } catch (Exception e) {
+                        System.out.println(e);
+                    }
+                }
+            }
+
+
+
+
+
     }
     public Boolean Fight(int a, int b, int c, int d) {
         Chess Chess1 = new Chess(a, b, jungleBoard[b][a]);
