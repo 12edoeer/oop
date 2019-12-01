@@ -1,12 +1,14 @@
+package hk.edu.polyu.comp.comp2021.jungle;
+
 public class Chess extends Coordinate{
-    private final char []CHESS = {'r', 'c', 'd', 'w', 'l', 't', 'L', 'E'};
+    private final char []CHESS = {'鼠', '貓', '狗', '狼', '豹', '虎', '獅', '象'};
     private int rank;
 
     Chess(int x ,int y) {
     	super(x,y);
     }
 
-    Chess(int x ,int y,char c) {
+    public Chess(int x, int y, char c) {
         super(x,y);
         for(int i = 0 ; i < CHESS.length ; i++){
             if(CHESS[i]==c)
@@ -17,7 +19,7 @@ public class Chess extends Coordinate{
         return CHESS[rank];
     }
 
-    int GetRank(){
+    public int GetRank(){
         return rank;
     }
     void SetRank(int rank) {this.rank = rank;}

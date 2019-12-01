@@ -1,3 +1,5 @@
+package hk.edu.polyu.comp.comp2021.jungle;
+
 class Coordinate {
     private int x, y;
 

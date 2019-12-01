@@ -1,23 +1,26 @@
-class Player{
+package hk.edu.polyu.comp.comp2021.jungle;
+
+public class Player{
 
     private String name;
-    final char traps = 'T';
-    final char den = 'D';
+    public final char traps = '阱';
+    public final char den = '穴';
     private Chess []chess = new Chess[8];
 
-    void ChessCreator(int x,int y,int rank) {
+
+    public void ChessCreator(int x, int y, int rank) {
     	chess[rank] = new Chess(x,y);
     	chess[rank].SetRank(rank);
     }
     
-    void SetName(String name) {
+    public void SetName(String name) {
         this.name = name;
     }
 
-    String GetName() {
+    public String GetName() {
         return name;
     }
-    char GetChess(int rank) {return chess[rank].GetChess();}
-    int GetX(int rank) {return chess[rank].GetX();}
-    int GetY(int rank) {return chess[rank].GetY();}
+    public char GetChess(int rank) {return chess[rank].GetChess();}
+    public int GetX(int rank) {return chess[rank].GetX();}
+    public int GetY(int rank) {return chess[rank].GetY();}
 }
