@@ -1,3 +1,10 @@
+package hk.edu.polyu.comp.comp2021.jungle.model;
+
+import hk.edu.polyu.comp.comp2021.jungle.Application;
+import hk.edu.polyu.comp.comp2021.jungle.Chess;
+import hk.edu.polyu.comp.comp2021.jungle.GetInput;
+import hk.edu.polyu.comp.comp2021.jungle.Player;
+
 import java.lang.annotation.Target;
 
 public class JungleGame {
@@ -9,34 +16,38 @@ public class JungleGame {
     private int[][] DenBoard = new int[9][7];
     private Player x = new Player();
     private Player y = new Player();
-    private static final char WATER = 'W';
-    private static final char LAND = ' ';
+    private static final char WATER = '河';
+    private static final char LAND = '　';
+    public static final String ANSI_RESET = "\u001B[0m";
+    public static final String ANSI_BLACK = "\u001B[30m";
+    public static final String ANSI_RED = "\u001B[31m";
+    public static final String ANSI_BLUE = "\u001B[34m";
 
     //Store the character into the jungleBoard Array
-    private void Insert(char c, int x, int y, int player) {
+    private void Insert(char c, int x, int y, int type) {
         this.jungleBoard[y][x] = c;
-        if (player == 1) {
+        if (type == 1) {
             this.PlayerjungleBoard[y][x] = 1;
         }
-        if (player == 2) {
+        if (type == 2) {
             this.PlayerjungleBoard[y][x] = 2;
         }
-        if (player == 10) {
+        if (type == 10) {
             this.WaterBoard[y][x] = 1;
         }
-        if (player == 11) {
+        if (type == 11) {
             this.WaterBoard[y][x] =2;
         }
-        if (player == 3) {
+        if (type == 3) {
             this.TrapBoard[y][x] = 1;
         }
-        if (player == 4) {
+        if (type == 4) {
             this.TrapBoard[y][x] = 2;
         }
-        if (player == 5) {
+        if (type == 5) {
             this.DenBoard[y][x] = 1;
         }
-        if (player == 6) {
+        if (type == 6) {
             this.DenBoard[y][x] = 2;
         }
 
@@ -61,16 +72,23 @@ public class JungleGame {
             //System.out.println("  - - - - - - -");
             System.out.print(z++ + "|");
             for (int j = 0; j < 7; j++) {
-                System.out.print(this.jungleBoard[i][j]);
+                if(WaterBoard[i][j]==1){
+                    System.out.print(ANSI_BLUE+this.jungleBoard[i][j]+ANSI_RESET);
+                }else if(this.PlayerjungleBoard[i][j]==2){
+                    System.out.print(ANSI_RED+this.jungleBoard[i][j]+ANSI_RESET);
+                }
+                else{
+                    System.out.print(ANSI_BLACK+this.jungleBoard[i][j]+ANSI_RESET);
+                }
                 System.out.print("|");
             }
             System.out.println();
         }
-        System.out.println("  - - - - - - -");
+        System.out.println("　一 一 一 一 一 一 一");
         System.out.print("  ");
         for (int i = 0; i < 7; i++) {
             char x = (char) (65 + i);
-            System.out.print(x + " ");
+            System.out.print(x + "　");
         }
         System.out.println();
         System.out.println();
@@ -138,9 +156,10 @@ public class JungleGame {
 
         for (int i = 0; i < 9; i++) {
             for (int j = 0; j < 7; j++) {
-                if ((j > 0 && j < 6 ) && (i > 1 && i < 7)) {
-                    this.Insert('\0', j, i, 11);
+                if ((j >= 0 && j <= 6 ) && (i > 1 && i < 7)) {
+                //    this.Insert('\0', j, i, 11);
                 }
+
                 if ((j > 0 && j < 6 && j != 3) && (i > 2 && i < 6)) {
                     this.Insert(WATER, j, i, 10);
                     continue;
@@ -162,19 +181,19 @@ public class JungleGame {
 
     }
 
-    public void UserMove(int OriX, int OriY, int targetX, int targetY, int move) {
+    public void UserMove(int OriX, int OriY, int targetX, int targetY) {
         ////////////////////////////////////////////////////////////////////////////
         // One space move only else you are tiger or lion can jump over the river //
         ////////////////////////////////////////////////////////////////////////////
-        checkPlayer(move,OriX,OriY);
+
 
         ////////////////////////////////////////////
         // Tiger and lion can jump over the river //
         ////////////////////////////////////////////
 
-        if (targetX - OriX + targetY - OriY > 1) {
-            if (this.jungleBoard[OriY][OriX] != 'L' || this.jungleBoard[OriY][OriX] != 't') {
-                System.out.println("Lion");
+        if (Math.abs(targetX - OriX) + Math.abs(targetY - OriY) > 1) {
+            if (this.jungleBoard[OriY][OriX] != '獅' || this.jungleBoard[OriY][OriX] != '虎') {
+                System.out.println("獅");
             }
             System.out.println("Invalid input, you can only move vertically or horizontally with one space");
             return;
@@ -182,10 +201,15 @@ public class JungleGame {
         /////////////////////////////////
         // Only rat can get into river //
         /////////////////////////////////
-        if (this.jungleBoard[targetY][targetX] == 'W') {
-            if (this.jungleBoard[OriY][OriX] != 'r') {
+        if (this.jungleBoard[targetY][targetX] == '河') {
+            if (this.jungleBoard[OriY][OriX] != '鼠') {
                 System.out.println("You can't get into river");
                 return;
+            }
+        }
+        if (this.jungleBoard[OriY][OriX] == '鼠') {
+            if (this.WaterBoard[OriY][OriX] == '河') {
+
             }
         }
 
@@ -220,7 +244,7 @@ public class JungleGame {
                         return;
                     }else{
                         this.PlayerjungleBoard[OriY][OriX] = 0;
-                        this.jungleBoard[OriY][OriX] = '\0';
+                        this.jungleBoard[OriY][OriX] = '　';
                         return;
                     }
                 }
@@ -235,33 +259,36 @@ public class JungleGame {
     public void Move(int targetX, int targetY, int OriX, int OriY) {
 
         this.jungleBoard[targetY][targetX] = this.jungleBoard[OriY][OriX];
-        this.jungleBoard[OriY][OriX] = '\0';
+        this.jungleBoard[OriY][OriX] = '　';
 
         this.PlayerjungleBoard[targetY][targetX] = this.PlayerjungleBoard[OriY][OriX];
-        this.PlayerjungleBoard[OriY][OriX] = '\0';
+        this.PlayerjungleBoard[OriY][OriX] = 0;
 
         ////////////////////////////
         //    rat move on water   //
         ////////////////////////////
         if (WaterBoard[OriY][OriX] == 1) {
-            this.Insert(WATER, OriY, OriX, 10);
-            jungleBoard[OriY][OriX] = 'W';
+            this.Insert(WATER, OriX, OriY, 10);
+            this.jungleBoard[OriY][OriX] = '河';
         }
 
         if (TrapBoard[OriY][OriX] == 1||TrapBoard[OriY][OriX] == 2) {
-            this.Insert(x.traps, OriY, OriX, 10);
-            jungleBoard[OriY][OriX] = 'T';
+            this.Insert(x.traps, OriX, OriY, TrapBoard[OriY][OriX]+2);
+            this.jungleBoard[OriY][OriX] = '阱';
+
         }
 
         System.out.println("Moved");
-        if(jungleBoard[targetY][targetX]=='D') {
+
+        if(DenBoard[targetY][targetX]==1||DenBoard[targetY][targetX]==2) {
+            System.out.println("Steped on 穴");
             if(DenBoard[targetY][targetX]!=PlayerjungleBoard[targetY][targetX]) {
-                System.out.println("You win");
+                System.out.println("Player "+PlayerjungleBoard[OriY][OriX]+" win");
+                PrintBoard();
+                Application.run = false;
                 Win();
             }
         }
-        PrintBoard();
-        Application.moveCount = Application.moveCount+1;
         return;
     }
     public void checkPlayer(int check, int x, int y){
@@ -269,39 +296,39 @@ public class JungleGame {
 
     }
 
+    public int getPlayerjungleBoard(int x, int y){
+        return PlayerjungleBoard[y][x];
+    }
 
 
 
 
+    public boolean Fight(int a, int b, int c, int d) {
 
-    public Boolean Fight(int a, int b, int c, int d) {
         Chess Chess1 = new Chess(a, b, jungleBoard[b][a]);
         Chess Chess2 = new Chess(c, d, jungleBoard[d][c]);
-        System.out.println("Chess one is: " + Chess1.GetRank());
-        System.out.println("Chess two is: " + Chess2.GetRank());
+        System.out.println("Chess one rank is: " + Chess1.GetRank());
+        System.out.println("Chess two rank is: " + Chess2.GetRank());
 
-        if(PlayerjungleBoard[d][c] == TrapBoard[d][c]) {
-            System.out.println("Win");
-            return true;
-        }
         if (Chess1.GetRank() == 0 && (Chess2.GetRank() == 7)) {
-            System.out.println("Win");
+            System.out.println("Win2");
             return true;
         }
         if (Chess1.GetRank() == 7 && (Chess2.GetRank() == 0)) {
-            System.out.println("Lose1");
+            System.out.println("Lose3");
             return false;
         }
         if (Chess1.GetRank() >= Chess2.GetRank()) {
-            System.out.println("Win");
+            System.out.println("Win4");
             return true;
         }else
         {
-            System.out.println("Lose");
+            System.out.println("Lose2");
             return false;
         }
 
     }
+
     public void Win(){
         System.out.println("FINISHHHHHHHHHHHHHHHHHHHHH");
         System.exit(0);

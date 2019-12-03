@@ -40,16 +40,33 @@ public class Application {
             game.PrintBoard();
 
         }
+        //Load
+        if (input.equals("load") || input.equals("Load")) {
+            System.out.println("Loading files...");
+            game.Load();
+            game.getName();
+            game.PrintBoard();
+            game.Load();
+
+
+        }
+
     }
     public static void getUserInput(JungleGame game){
         while (run) {
             try {
                 if(moveCount%2==1) {
-                    System.out.println("Player one please input the chess that you want to move:");
+                    System.out.println("Player one please input the chess that you want to move (save/load):");
                 }else{
-                    System.out.println("Player two please input the chess that you want to move:");
+                    System.out.println("Player two please input the chess that you want to move (save/load):");
                 }
                 input = GetInput.Input();
+                //Save
+                if (input.equals("save")){
+                    System.out.println("Saving files...");
+                    game.Save();
+                    continue;
+                }
                 char originalChess[] = input.toCharArray();
                 originalChess[0] = input.charAt(0);
                 int x = originalChess[0] - 65;
@@ -74,9 +91,9 @@ public class Application {
                     System.out.println("Can't move other player chess");
                 }
                 else {
-                    game.UserMove(x, y, x1, y1);
+                    int i = game.UserMove(x, y, x1, y1);
                     game.PrintBoard();
-
+                    if (i == -1)moveCount--;
                     if(moveCount==2)moveCount=0;
                     moveCount++;
                     System.out.println(moveCount);
@@ -89,4 +106,5 @@ public class Application {
 
         }
     }
+
 }
